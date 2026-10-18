@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenQR Core — Free & Open Source QR Code & Barcode Generator</title>
+  <meta name="description" content="100% client-side QR code and barcode generator. Free forever, no watermarks, client-side." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/core.css" />
+
+  <!-- ESM Modules -->
+  <script type="module">
+    import { CustomQRCode } from 'https://esm.sh/custom-qr-code@2.0.3';
+    window.CustomQRCode = CustomQRCode;
+  </script>
+
+  <!-- Pinned CDN Scripts with Subresource Integrity (SRI) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"
+          integrity="sha384-Kk5SjBOKprEnGfyBWfD2zROFd1Cu8kwOXxG2GIhYPcoDL2rBJS9P8Ud1ZMy4412a"
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+          integrity="sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk"
+          crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></svg>
+        <span>OpenQR Core</span>
+      </a>
+      <div class="nav-links">
+        <a href="#generator">Generator</a>
+        <a href="scanner.html">Scanner</a>
+        <a href="https://github.com/NvxStrikes/OpenQR-Core" target="_blank" rel="noopener noreferrer" class="nav-badge">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          <span>100% Client-Side &middot; Open Source</span>
+        </div>
+        <h1>QR codes &amp; barcodes generated right in your browser.</h1>
+        <p>No account required, no server-side copies, and no expiry. Create high-resolution PNG, SVG, and PDF codes instantly.</p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a href="#generator" class="btn-primary btn-lg" onclick="switchGenMode('qr')">Create QR Code</a>
+          <a href="#generator" class="btn-outline btn-lg" onclick="switchGenMode('barcode')">Create Barcode</a>
+          <a href="scanner.html" class="btn-outline btn-lg">Open Scanner &rarr;</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="qr-showcase">
+          <div id="heroQr"></div>
+          <div class="showcase-label" id="heroQrLabel">openqr.tech</div>
+          <div class="hero-live-wrap">
+            <input type="text" id="heroLinkInput" class="hero-live-input" placeholder="Type a link to preview..." oninput="handleHeroLiveInput(event)" onkeydown="if(event.key==='Enter'){event.preventDefault();customizeFromHero();}" autocomplete="off" />
+            <button type="button" class="btn-primary btn-sm" onclick="customizeFromHero()">Customize &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENERATOR SECTION -->
+  <section class="generator-section" id="generator">
+    <div class="section-header">
+      <div class="gen-mode-toggle-wrap">
+        <div class="gen-mode-toggle" role="tablist">
+          <button type="button" class="mode-tab active" id="tabModeQr" onclick="switchGenMode('qr')">QR Code</button>
+          <button type="button" class="mode-tab" id="tabModeBarcode" onclick="switchGenMode('barcode')">Barcode</button>
+        </div>
+      </div>
+      <h2>Generate Your Code</h2>
+      <p>Configure parameters, preview in real time, and download.</p>
+    </div>
+
+    <!-- QR CODE MODE -->
+    <div class="generator-layout" id="genQrLayout">
+      <div class="gen-card">
+        <!-- Types -->
+        <div class="qr-type-grid">
+          <button type="button" class="type-btn active" data-type="url" onclick="setType('url', this)">URL</button>
+          <button type="button" class="type-btn" data-type="text" onclick="setType('text', this)">Text</button>
+          <button type="button" class="type-btn" data-type="wifi" onclick="setType('wifi', this)">Wi-Fi</button>
+          <button type="button" class="type-btn" data-type="vcard" onclick="setType('vcard', this)">vCard</button>
+          <button type="button" class="type-btn" data-type="email" onclick="setType('email', this)">Email</button>
+          <button type="button" class="type-btn" data-type="sms" onclick="setType('sms', this)">SMS</button>
+          <button type="button" class="type-btn" data-type="location" onclick="setType('location', this)">Location</button>
+          <button type="button" class="type-btn" data-type="event" onclick="setType('event', this)">Event</button>
+        </div>
+
+        <!-- Inputs by Type -->
+        <div id="panel-url" class="type-panel">
+          <div class="form-field">
+            <label for="url-input">Website URL</label>
+            <input type="text" id="url-input" class="form-input" placeholder="https://example.com" oninput="scheduleGen()" />
+            <div id="url-error" style="display:none;font-size:12px;color:#eb5757;margin-top:6px;font-weight:500;line-height:1.4;"></div>
+          </div>
+        </div>
+
+        <div id="panel-text" class="type-panel" style="display:none;">
+          <div class="form-field">
+            <label for="text-input">Plain Text Content</label>
+            <textarea id="text-input" class="form-textarea" placeholder="Enter text..." oninput="scheduleGen()"></textarea>
+          </div>
+        </div>
+
+        <div id="panel-wifi" class="type-panel" style="display:none;">
+          <div class="form-field">
+            <label for="wifi-ssid">Network SSID</label>
+            <input type="text" id="wifi-ssid" class="form-input" placeholder="WiFi Network Name" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="wifi-pass">Password</label>
+            <input type="text" id="wifi-pass" class="form-input" placeholder="Password" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="wifi-enc">Encryption</label>
+            <select id="wifi-enc" class="form-select" onchange="scheduleGen()">
+              <option value="WPA">WPA/WPA2/WPA3</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">None (Open)</option>
+            </select>
+          </div>
+          <div class="form-field" style="display:flex;gap:8px;align-items:center;">
+            <input type="checkbox" id="wifi-hidden" onchange="scheduleGen()" />
+            <label for="wifi-hidden" style="margin:0;cursor:pointer;">Hidden Network</label>
+          </div>
+        </div>
+
+        <div id="panel-vcard" class="type-panel" style="display:none;">
+          <div class="form-field">
+            <label for="vcard-fn">Full Name</label>
+            <input type="text" id="vcard-fn" class="form-input" placeholder="Jane Doe" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="vcard-phone">Phone</label>
+            <input type="text" id="vcard-phone" class="form-input" placeholder="+1 555-0199" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="vcard-email">Email</label>
+            <input type="email" id="vcard-email" class="form-input" placeholder="jane@example.com" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="vcard-org">Organization</label>
+            <input type="text" id="vcard-org" class="form-input" placeholder="Company Inc" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="vcard-title">Title / Role</label>
+            <input type="text" id="vcard-title" class="form-input" placeholder="Designer" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="vcard-url">Website</label>
+            <input type="text" id="vcard-url" class="form-input" placeholder="https://example.com" oninput="scheduleGen()" />
+          </div>
+        </div>
+
+        <div id="panel-email" class="type-panel" style="display:none;">
+          <div class="form-field">
+            <label for="email-to">Recipient Email</label>
+            <input type="email" id="email-to" class="form-input" placeholder="hello@example.com" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="email-sub">Subject</label>
+            <input type="text" id="email-sub" class="form-input" placeholder="Inquiry" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="email-body">Body</label>
+            <textarea id="email-body" class="form-textarea" placeholder="Hello..." oninput="scheduleGen()"></textarea>
+          </div>
+        </div>
+
+        <div id="panel-sms" class="type-panel" style="display:none;">
+          <div class="form-field">
+            <label for="sms-num">Phone Number</label>
+            <input type="tel" id="sms-num" class="form-input" placeholder="+1 555-0199" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="sms-msg">Message</label>
+            <textarea id="sms-msg" class="form-textarea" placeholder="Message text..." oninput="scheduleGen()"></textarea>
+          </div>
+        </div>
+
+        <div id="panel-location" class="type-panel" style="display:none;">
+          <div class="form-field">
+            <label for="loc-lat">Latitude</label>
+            <input type="text" id="loc-lat" class="form-input" placeholder="37.7749" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="loc-lng">Longitude</label>
+            <input type="text" id="loc-lng" class="form-input" placeholder="-122.4194" oninput="scheduleGen()" />
+          </div>
+        </div>
+
+        <div id="panel-event" class="type-panel" style="display:none;">
+          <div class="form-field">
+            <label for="event-title">Event Title</label>
+            <input type="text" id="event-title" class="form-input" placeholder="Conference 2026" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="event-start">Start Date &amp; Time</label>
+            <input type="datetime-local" id="event-start" class="form-input" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="event-end">End Date &amp; Time</label>
+            <input type="datetime-local" id="event-end" class="form-input" oninput="scheduleGen()" />
+          </div>
+          <div class="form-field">
+            <label for="event-loc">Location</label>
+            <input type="text" id="event-loc" class="form-input" placeholder="Convention Center" oninput="scheduleGen()" />
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:24px 0;" />
+
+        <!-- Sticker Frames (14 Free Frames) -->
+        <div class="form-field">
+          <label>Sticker Frame &amp; Border (100% Free)</label>
+          <div class="sticker-chips-grid" id="stickerFrameChips">
+            <button type="button" class="sticker-chip active" data-frame="none" onclick="selectStickerFrame('none')">None</button>
+            <button type="button" class="sticker-chip" data-frame="bottom-pill" onclick="selectStickerFrame('bottom-pill')">Bottom Tag</button>
+            <button type="button" class="sticker-chip" data-frame="top-banner" onclick="selectStickerFrame('top-banner')">Top Banner</button>
+            <button type="button" class="sticker-chip" data-frame="phone-mockup" onclick="selectStickerFrame('phone-mockup')">Phone</button>
+            <button type="button" class="sticker-chip" data-frame="viewfinder" onclick="selectStickerFrame('viewfinder')">Viewfinder</button>
+            <button type="button" class="sticker-chip" data-frame="ticket-stub" onclick="selectStickerFrame('ticket-stub')">Ticket</button>
+            <button type="button" class="sticker-chip" data-frame="minimal-card" onclick="selectStickerFrame('minimal-card')">Card</button>
+            <button type="button" class="sticker-chip" data-frame="chat-bubble" onclick="selectStickerFrame('chat-bubble')">Chat</button>
+            <button type="button" class="sticker-chip" data-frame="circle-badge" onclick="selectStickerFrame('circle-badge')">Circle</button>
+            <button type="button" class="sticker-chip" data-frame="retro-polaroid" onclick="selectStickerFrame('retro-polaroid')">Polaroid</button>
+            <button type="button" class="sticker-chip" data-frame="tag-hangtag" onclick="selectStickerFrame('tag-hangtag')">Hangtag</button>
+            <button type="button" class="sticker-chip" data-frame="store-sign" onclick="selectStickerFrame('store-sign')">Store Sign</button>
+            <button type="button" class="sticker-chip" data-frame="laptop-screen" onclick="selectStickerFrame('laptop-screen')">Laptop</button>
+            <button type="button" class="sticker-chip" data-frame="badge-ribbon" onclick="selectStickerFrame('badge-ribbon')">Ribbon</button>
+            <button type="button" class="sticker-chip" data-frame="table-tent" onclick="selectStickerFrame('table-tent')">Table Stand</button>
+            <button type="button" class="sticker-chip" data-frame="neon-glow" onclick="selectStickerFrame('neon-glow')">Cyber HUD</button>
+          </div>
+        </div>
+
+        <div id="frameTextWrap" class="form-field" style="display:none;">
+          <label for="frameTextInput">Frame CTA Text</label>
+          <input type="text" id="frameTextInput" class="form-input" value="SCAN ME" maxlength="24" oninput="updateFrameText(this.value)" />
+        </div>
+
+        <!-- Color & Options -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-field">
+            <label for="colorFg">Foreground</label>
+            <div class="color-input-wrap">
+              <input type="color" id="colorFg" value="#000000" oninput="scheduleGen()" />
+              <span style="font-size:12px;font-family:monospace;">#000000</span>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="colorBg">Background</label>
+            <div class="color-input-wrap" id="colorBgWrap">
+              <input type="color" id="colorBg" value="#ffffff" oninput="scheduleGen()" />
+              <span style="font-size:12px;font-family:monospace;">#ffffff</span>
+            </div>
+            <div style="margin-top:6px;display:flex;align-items:center;gap:6px;">
+              <input type="checkbox" id="transparentBg" onchange="toggleTransparentBg()" />
+              <label for="transparentBg" style="font-size:11px;margin:0;cursor:pointer;">Transparent</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="errorLevel">Error Correction</label>
+          <select id="errorLevel" class="form-select" onchange="scheduleGen()">
+            <option value="L">L — 7% recovery</option>
+            <option value="M" selected>M — 15% recovery (Recommended)</option>
+            <option value="Q">Q — 25% recovery</option>
+            <option value="H">H — 30% recovery</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Live Preview -->
+      <div class="preview-card">
+        <span style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;">Live Preview</span>
+        <div class="preview-box" id="previewQr"></div>
+        <div class="dl-btn-group">
+          <button type="button" class="btn-primary" onclick="downloadQR('png')">PNG</button>
+          <button type="button" class="btn-outline" onclick="downloadQR('svg')">SVG</button>
+          <button type="button" class="btn-outline" onclick="downloadQR('pdf')">PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BARCODE MODE -->
+    <div class="generator-layout" id="genBarcodeLayout" style="display:none;">
+      <div class="gen-card">
+        <div class="form-field">
+          <label for="barcode-format">Symbology</label>
+          <select id="barcode-format" class="form-select" onchange="generateBarcode()">
+            <option value="CODE128" selected>Code 128 (Alphanumeric)</option>
+            <option value="CODE39">Code 39</option>
+            <option value="EAN13">EAN-13 (12-13 Digits)</option>
+            <option value="UPC">UPC-A (11-12 Digits)</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="barcode-value">Barcode Value</label>
+          <input type="text" id="barcode-value" class="form-input" placeholder="e.g. 123456789012" oninput="generateBarcode()" />
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-field">
+            <label for="barcodeColor">Line Color</label>
+            <div class="color-input-wrap">
+              <input type="color" id="barcodeColor" value="#000000" oninput="generateBarcode()" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="barcodeBg">Background</label>
+            <div class="color-input-wrap">
+              <input type="color" id="barcodeBg" value="#ffffff" oninput="generateBarcode()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-card">
+        <span style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;">Barcode Preview</span>
+        <div class="preview-box" id="previewBarcode"></div>
+        <div class="dl-btn-group">
+          <button type="button" class="btn-primary" onclick="downloadBarcode('png')">PNG</button>
+          <button type="button" class="btn-outline" onclick="downloadBarcode('svg')">SVG</button>
+          <button type="button" class="btn-outline" onclick="downloadBarcode('pdf')">PDF</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>OpenQR Core &middot; Released under the <a href="LICENSE">MIT License</a> &middot; <a href="THIRD_PARTY_NOTICES.md">Third-Party Notices</a> &middot; <a href="https://github.com/NvxStrikes/OpenQR-Core">GitHub</a></p>
+  </footer>
+
+  <script src="js/generator.js"></script>
+</body>
+</html>

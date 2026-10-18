@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenQR Core Scanner — Free & Open Source QR Code & Barcode Scanner</title>
+  <meta name="description" content="100% client-side QR code and barcode scanner. Decodes directly in your browser using your webcam or image files." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/core.css" />
+
+  <!-- Pinned CDN Scripts with Subresource Integrity (SRI) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"
+          integrity="sha384-c9d8RFSL+u3exBOJ4Yp3HUJXS4znl9f+z66d1y54ig+ea249SpqR+w1wyvXz/lk+"
+          crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></svg>
+        <span>OpenQR Core</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Generator</a>
+        <a href="scanner.html" style="color:var(--text);font-weight:600;">Scanner</a>
+        <a href="https://github.com/NvxStrikes/OpenQR-Core" target="_blank" rel="noopener noreferrer" class="nav-badge">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SCANNER CONTAINER -->
+  <main style="max-width:760px;margin:40px auto;padding:0 20px 80px;">
+    <div style="margin-bottom:28px;">
+      <h1 style="font-size:32px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;">Browser QR &amp; Barcode Scanner</h1>
+      <p style="font-size:15px;color:var(--text2);line-height:1.6;">Point your camera at a code or upload an image file. Decoding runs entirely inside your browser.</p>
+    </div>
+
+    <!-- Live Camera Scanner Card -->
+    <div class="gen-card" style="margin-bottom:24px;text-align:center;">
+      <div id="reader" style="width:100%;max-width:480px;margin:0 auto 16px;border-radius:12px;overflow:hidden;background:var(--bg2);"></div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button type="button" class="btn-primary" id="btnStartScan" onclick="startScanner()">Start Camera</button>
+        <button type="button" class="btn-outline" id="btnStopScan" onclick="stopScanner()" style="display:none;">Stop Camera</button>
+      </div>
+    </div>
+
+    <!-- Image Upload Scan Card -->
+    <div class="gen-card" style="margin-bottom:24px;text-align:center;padding:24px;">
+      <h2 style="font-size:16px;font-weight:600;margin-bottom:8px;">Upload Image to Scan</h2>
+      <p style="font-size:13px;color:var(--text3);margin-bottom:16px;">Decode any QR code or barcode from a saved screenshot or photo.</p>
+      <input type="file" id="scanFileInput" accept="image/*" style="display:none;" />
+      <button type="button" class="btn-outline" onclick="document.getElementById('scanFileInput').click()">Choose Image File</button>
+      <div id="file-scan-temp" style="display:none;"></div>
+    </div>
+
+    <!-- Scan Result Card -->
+    <div id="scanResultWrap" class="gen-card" style="display:none;margin-bottom:24px;background:var(--bg);">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);margin-bottom:8px;">Decoded Content</div>
+      <div id="scanResultText" style="font-size:15px;color:var(--text);word-break:break-all;margin-bottom:16px;padding:12px;background:var(--bg2);border-radius:8px;line-height:1.6;font-family:monospace;"></div>
+      <div id="productCard" style="display:none;margin-bottom:16px;"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button type="button" class="btn-primary btn-sm" id="scanResultAction" style="display:none;">Open Link</button>
+        <button type="button" class="btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('scanResultText').textContent).then(() => alert('Copied to clipboard!'))">Copy Text</button>
+        <button type="button" class="btn-outline btn-sm" onclick="document.getElementById('scanResultWrap').style.display='none'">Dismiss</button>
+      </div>
+    </div>
+
+    <!-- Scan History List -->
+    <div class="gen-card" style="padding:0;overflow:hidden;">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:14px;font-weight:600;">Scan History (Local Device)</span>
+        <button type="button" class="btn-outline btn-sm" onclick="clearHistory()" style="font-size:11px;padding:4px 8px;">Clear</button>
+      </div>
+      <div id="scanHistoryList"></div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>OpenQR Core &middot; Released under the <a href="LICENSE">MIT License</a> &middot; <a href="THIRD_PARTY_NOTICES.md">Third-Party Notices</a> &middot; <a href="https://github.com/NvxStrikes/OpenQR-Core">GitHub</a></p>
+  </footer>
+
+  <script src="js/scanner.js"></script>
+</body>
+</html>
