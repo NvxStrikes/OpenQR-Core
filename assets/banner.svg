@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="1280" height="320" role="img" aria-label="OpenQR Core Banner">
+  <defs>
+    <style>
+      .bg { fill: #f8f7f4; }
+      .brand-title {
+        font-family: 'Fraunces', Georgia, serif;
+        font-size: 52px;
+        font-weight: 300;
+        letter-spacing: -1.2px;
+        fill: #1a1a18;
+      }
+      .brand-core {
+        font-family: 'Fraunces', Georgia, serif;
+        font-size: 52px;
+        font-weight: 400;
+        font-style: italic;
+        fill: #1D9E75;
+      }
+      .brand-sub {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-size: 19px;
+        font-weight: 400;
+        fill: #555552;
+        letter-spacing: -0.2px;
+      }
+      .badge-bg { fill: rgba(29, 158, 117, 0.08); stroke: rgba(29, 158, 117, 0.25); stroke-width: 1; }
+      .badge-text {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        fill: #1D9E75;
+        text-transform: uppercase;
+      }
+      .qr-module { fill: #1a1a18; }
+      .qr-accent { fill: #1D9E75; }
+      .card-bg { fill: #ffffff; stroke: #e5e4de; stroke-width: 1; rx: 16px; }
+
+      /* Subtle corner pulse animation */
+      @keyframes softPulse {
+        0%, 100% { opacity: 0.88; transform: scale(1); transform-origin: center; }
+        50% { opacity: 1; transform: scale(1.05); transform-origin: center; }
+      }
+      .pulse-target {
+        animation: softPulse 3.6s ease-in-out infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .pulse-target {
+          animation: none !important;
+        }
+      }
+    </style>
+  </defs>
+
+  <!-- Clean Warm Background -->
+  <rect class="bg" width="1280" height="320" rx="16" />
+  <rect class="bg" width="1280" height="320" rx="16" stroke="#e5e4de" stroke-width="1" fill="none" />
+
+  <!-- Left Column: Branding & Tagline -->
+  <g transform="translate(80, 0)">
+    <!-- Pill Badge -->
+    <g transform="translate(0, 68)">
+      <rect class="badge-bg" width="176" height="28" rx="14" />
+      <circle cx="16" cy="14" r="4" fill="#1D9E75" />
+      <text x="28" y="18" class="badge-text">100% Client-Side</text>
+    </g>
+
+    <!-- Main Headline -->
+    <text x="0" y="148" class="brand-title">OpenQR <tspan class="brand-core">Core</tspan></text>
+
+    <!-- Tagline -->
+    <text x="0" y="186" class="brand-sub">Free, static, client-side QR code &amp; barcode generator and scanner</text>
+
+    <!-- Meta specs row -->
+    <g transform="translate(0, 224)">
+      <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#777774">
+        MIT License &nbsp;&middot;&nbsp; Zero Server Dependencies &nbsp;&middot;&nbsp; 14 Canvas Sticker Frames &nbsp;&middot;&nbsp; PNG &middot; SVG &middot; PDF
+      </text>
+    </g>
+  </g>
+
+  <!-- Right Visual: Calm Minimal QR Card with Soft Glow Motif -->
+  <g transform="translate(980, 50)">
+    <!-- Soft Background Shadow/Glow -->
+    <rect x="-8" y="-8" width="226" height="226" rx="20" fill="rgba(29, 158, 117, 0.06)" />
+    <!-- White Inner Card -->
+    <rect class="card-bg" x="0" y="0" width="210" height="210" rx="14" />
+
+    <!-- QR Matrix (Exact geometric layout) -->
+    <g transform="translate(30, 30)">
+      <!-- Top-Left Finder Eye (Pulsing softly) -->
+      <g class="pulse-target" style="transform-origin: 30px 30px;">
+        <rect x="0" y="0" width="46" height="46" rx="3" class="qr-module" />
+        <rect x="7" y="7" width="32" height="32" rx="2" fill="#ffffff" />
+        <rect x="14" y="14" width="18" height="18" rx="1.5" class="qr-accent" />
+      </g>
+
+      <!-- Top-Right Finder Eye -->
+      <g class="pulse-target" style="transform-origin: 127px 30px;">
+        <rect x="104" y="0" width="46" height="46" rx="3" class="qr-module" />
+        <rect x="111" y="7" width="32" height="32" rx="2" fill="#ffffff" />
+        <rect x="118" y="14" width="18" height="18" rx="1.5" class="qr-accent" />
+      </g>
+
+      <!-- Bottom-Left Finder Eye -->
+      <g class="pulse-target" style="transform-origin: 30px 127px;">
+        <rect x="0" y="104" width="46" height="46" rx="3" class="qr-module" />
+        <rect x="7" y="111" width="32" height="32" rx="2" fill="#ffffff" />
+        <rect x="14" y="118" width="18" height="18" rx="1.5" class="qr-accent" />
+      </g>
+
+      <!-- Clean Central & Timing Bits -->
+      <rect x="56" y="8" width="8" height="8" rx="1" class="qr-module" />
+      <rect x="72" y="8" width="8" height="8" rx="1" class="qr-module" />
+      <rect x="88" y="8" width="8" height="8" rx="1" class="qr-module" />
+
+      <rect x="8" y="56" width="8" height="8" rx="1" class="qr-module" />
+      <rect x="8" y="72" width="8" height="8" rx="1" class="qr-module" />
+      <rect x="8" y="88" width="8" height="8" rx="1" class="qr-module" />
+
+      <!-- Center Data Modules -->
+      <rect x="56" y="56" width="12" height="12" rx="1" class="qr-accent" />
+      <rect x="74" y="56" width="10" height="10" rx="1" class="qr-module" />
+      <rect x="90" y="56" width="10" height="10" rx="1" class="qr-module" />
+
+      <rect x="56" y="74" width="10" height="10" rx="1" class="qr-module" />
+      <rect x="72" y="74" width="14" height="14" rx="2" class="qr-module" />
+      <rect x="92" y="74" width="8" height="8" rx="1" class="qr-accent" />
+
+      <rect x="56" y="94" width="10" height="10" rx="1" class="qr-module" />
+      <rect x="72" y="94" width="10" height="10" rx="1" class="qr-accent" />
+      <rect x="88" y="94" width="12" height="12" rx="1" class="qr-module" />
+
+      <!-- Bottom-Right Alignment Eye -->
+      <rect x="108" y="108" width="30" height="30" rx="2" class="qr-module" />
+      <rect x="114" y="114" width="18" height="18" rx="1" fill="#ffffff" />
+      <rect x="119" y="119" width="8" height="8" rx="0.8" class="qr-accent" />
+
+      <rect x="106" y="74" width="10" height="10" rx="1" class="qr-module" />
+      <rect x="124" y="74" width="10" height="10" rx="1" class="qr-module" />
+      <rect x="74" y="118" width="10" height="10" rx="1" class="qr-module" />
+      <rect x="90" y="118" width="8" height="8" rx="1" class="qr-module" />
+      <rect x="62" y="132" width="12" height="10" rx="1" class="qr-module" />
+    </g>
+  </g>
+</svg>
